@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛍️ NextShopKit Template – Shop Starter
 
-## Getting Started
+This is a **starter template for demonstrating the usage of the [NextShopKit SDK](https://github.com/NextShopKit/sdk)** in a real-world, headless e-commerce frontend.
 
-First, run the development server:
+Built with **Next.js 14 App Router**, it provides a fully functional Shopify-integrated storefront including:
+
+- Product listing and detail pages
+- Cart functionality with state management
+- Dynamic variant handling
+- Styled with **Tailwind CSS** and **ShadCN UI**
+- Built-in context providers (e.g., `CartProvider`)
+
+---
+
+## 🚀 What is NextShopKit?
+
+[NextShopKit](https://github.com/NextShopKit/sdk) is a flexible SDK for building **Shopify-powered storefronts with Next.js**. It abstracts the Storefront API and provides:
+
+- 🔍 Product and collection fetching (`getProducts`, `getProduct`)
+- 🛒 Cart utilities (`addToCart`, `getCart`, `updateCartItem`)
+- 🧱 Strong TypeScript typings for Shopify models
+- 🧠 Custom metafield parsing and transformation
+- 🛠️ Hooks and context providers for client-side cart management
+
+---
+
+## 📦 Features in This Template
+
+- ✅ Pre-wired with `@nextshopkit/pro` or `pro-development` SDK
+- ✅ Context-based cart with `useCart()` and `CartProvider`
+- ✅ Product page with variant selection and dynamic pricing
+- ✅ Image galleries using `next/image`
+- ✅ Clean layout structure (navbar, page shell, layout hierarchy)
+
+---
+
+## 🧪 Try It Out
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+git clone https://github.com/NextShopKit/template-shop-starter.git
+cd template-shop-starter
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> Make sure to add your own `.env` with Shopify Storefront credentials:
+>
+> ```env
+> NEXT_PUBLIC_SHOPIFY_DOMAIN=your-shop.myshopify.com
+> NEXT_PUBLIC_STOREFRONT_TOKEN=your-access-token
+> ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧱 Folder Structure
 
-## Learn More
+```
+components/
+  Navbar/
+  ProductHeader/
+layouts/
+  ShopLayout.tsx
+lib/
+  nextshopkit/
+    product.ts         # Wrapper for getProduct
+    ...
+providers/
+  CartProvider.tsx     # Wraps NextShopKit CartProvider
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Customize It
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Feel free to modify:
 
-## Deploy on Vercel
+- **Styling:** Tailwind + ShadCN components
+- **State:** Replace the cart with your own logic or integrate with your CMS
+- **APIs:** Extend the SDK with custom metafield handling
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+
+MIT — use freely for commercial or personal projects.
+
+---
+
+## 💬 Questions?
+
+Open an issue or reach out at [github.com/NextShopKit](https://github.com/NextShopKit)
