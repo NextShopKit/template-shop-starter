@@ -8,6 +8,7 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import { formatCurrency } from "@/utils/formatCurrency";
+import QuantitySelector from "../Reusables/QuantitySelector";
 
 interface ProductHeaderProps {
   product: Product;
@@ -17,6 +18,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
   const { title, featuredImage, images, metafields, variants } = product;
   const [currentImage, setCurrentImage] = React.useState(featuredImage);
   const [selectedVariant, setSelectedVariant] = React.useState(variants[0]);
+  const [quantity, setQuantity] = React.useState(1);
   const userLocale = navigator.language;
   console.log("ProductHeader", product);
   const { addProducts } = useCart();
@@ -26,7 +28,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
     console.log("Add to cart clicked:", variantId);
     try {
       setLoading(true);
-      await addProducts([{ merchandiseId: variantId, quantity: 1 }]);
+      await addProducts([{ merchandiseId: variantId, quantity: quantity }]);
     } catch (error) {
       console.error("Error adding to cart:", error);
     } finally {
@@ -126,6 +128,16 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
             <p className="text-2xl font-bold text-cyan-700">
               {formatCurrency(selectedVariant.price, userLocale)}
             </p>
+          </div>
+          <div className="mt-4">
+            <QuantitySelector
+              value={quantity}
+              setValue={setQuantity}
+              loading={loading}
+              size="md"
+              min={1}
+              max={10}
+            />
           </div>
           <div className="flex gap-2 mt-4 w-max">
             <Button
