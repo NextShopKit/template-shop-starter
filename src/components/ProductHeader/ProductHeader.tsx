@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface ProductHeaderProps {
   product: Product;
@@ -16,6 +17,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
   const { title, featuredImage, images, metafields, variants } = product;
   const [currentImage, setCurrentImage] = React.useState(featuredImage);
   const [selectedVariant, setSelectedVariant] = React.useState(variants[0]);
+  const userLocale = navigator.language;
   console.log("ProductHeader", product);
   const { addProducts } = useCart();
   const [loading, setLoading] = React.useState(false);
@@ -122,10 +124,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
           <div className="flex gap-2 mt-6 align-center">
             <p className="text-2xl font-bold text-gray-700">Price:</p>
             <p className="text-2xl font-bold text-cyan-700">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: selectedVariant.price.currencyCode,
-              }).format(selectedVariant.price.amount)}
+              {formatCurrency(selectedVariant.price, userLocale)}
             </p>
           </div>
           <div className="flex gap-2 mt-4 w-max">

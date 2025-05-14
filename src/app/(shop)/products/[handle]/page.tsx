@@ -1,5 +1,5 @@
 import ProductHeader from "@/components/ProductHeader/ProductHeader";
-import ShopLayout from "@/Layouts/ShopLayout";
+import ShopLayout from "@/layouts/ShopLayout";
 import { fetchProduct } from "@/lib/nextshopkit/product";
 import { notFound } from "next/navigation";
 import React from "react";

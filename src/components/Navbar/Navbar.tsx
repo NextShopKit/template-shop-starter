@@ -60,14 +60,16 @@ export default function Navbar() {
 
           {/* Cart */}
           <div className="relative flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              aria-label="Cart"
-              className="cursor-pointer"
-            >
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
+            <Link href="/cart" scroll={false}>
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Cart"
+                className="cursor-pointer"
+              >
+                <ShoppingCart className="h-5 w-5" />
+              </Button>
+            </Link>
 
             {cartCount > 0 && (
               <Badge

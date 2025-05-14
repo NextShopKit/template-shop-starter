@@ -1,9 +1,13 @@
+"use client";
 import { Product } from "@nextshopkit/pro-development";
 import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { formatCurrency } from "@/utils/formatCurrency";
+import { useCart } from "@nextshopkit/pro-development/client";
+import { useRouter } from "next/navigation";
 
 interface ProductProps {
   product: Product;
@@ -11,18 +15,23 @@ interface ProductProps {
 
 const Card1 = ({ product }: ProductProps) => {
   const { title, featuredImage, price, compareAtPrice, handle } = product;
+  const { loading, addProducts } = useCart();
+  const userLocale = navigator.language;
+  const router = useRouter();
 
-  const { amount, currencyCode } = price;
+  const productPrice = formatCurrency(price, userLocale);
+  const productCompareAtPrice = formatCurrency(compareAtPrice, userLocale);
 
-  const productPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currencyCode,
-  }).format(amount);
-
-  const productCompareAtPrice = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: compareAtPrice?.currencyCode ?? currencyCode,
-  }).format(compareAtPrice?.amount ?? 0);
+  const handleAddToCart = async () => {
+    try {
+      await addProducts([
+        { merchandiseId: product.variants[0].id, quantity: 1 },
+      ]);
+      router.push("/cart");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
 
   return (
     <div className="w-full h-full relative rounded-lg overflow-hidden border border-gray-200 shadow-md group">
@@ -57,7 +66,12 @@ const Card1 = ({ product }: ProductProps) => {
               )}
             </div>
           </div>
-          <Button type="button" className="cursor-pointer">
+          <Button
+            type="button"
+            className="cursor-pointer"
+            onClick={() => handleAddToCart()}
+            disabled={loading}
+          >
             <ShoppingCart className="w-4 h-4" />
           </Button>
         </div>
