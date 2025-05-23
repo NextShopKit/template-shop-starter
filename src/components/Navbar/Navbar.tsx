@@ -34,7 +34,7 @@ export default function Navbar() {
               <Link href="/">Acme Store</Link>
             </div>
 
-            <Link href="/" className="text-sm text-gray-500">
+            <Link href="/collections/all" className="text-sm text-gray-500">
               All products
             </Link>
           </div>

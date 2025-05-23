@@ -20,12 +20,11 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
   const [selectedVariant, setSelectedVariant] = React.useState(variants[0]);
   const [quantity, setQuantity] = React.useState(1);
   const userLocale = navigator.language;
-  console.log("ProductHeader", product);
+
   const { addProducts } = useCart();
   const [loading, setLoading] = React.useState(false);
 
   const handleAddToCart = async (variantId: string) => {
-    console.log("Add to cart clicked:", variantId);
     try {
       setLoading(true);
       await addProducts([{ merchandiseId: variantId, quantity: quantity }]);
@@ -34,13 +33,8 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
     } finally {
       setLoading(false);
     }
+  };
 
-    // Add your logic here
-  };
-  const handleBuyNow = (variantId: string) => {
-    console.log("Buy now clicked:", variantId);
-    // Add your logic here
-  };
   return (
     <div className="page-container">
       <nav aria-label="Breadcrumb" className="w-full pt-4">

@@ -15,7 +15,6 @@ export default async function Home() {
     availableFilters,
   } = result;
 
-  console.log("Collection data:", result);
   return (
     <>
       <div className="page-container">

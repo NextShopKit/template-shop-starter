@@ -2,12 +2,20 @@
 import { GetCollectionOptions } from "@nextshopkit/pro-development";
 import { getCollection } from "./client";
 
+// https://apps.shopify.com/search-and-discovery
+// This app is required to see metafields in the available filters.
+// Before trying to find the metafields in the filters, activate the related filter on the app
+
 export async function fetchCollectionWithMetafields(
   params: Partial<GetCollectionOptions> & { collectionHandle: string }
 ) {
   return await getCollection({
     includeProducts: true,
 
+    collectionMetafields: [
+      { field: "custom.short_description", type: "multi_line_text" },
+      { field: "custom.main_image", type: "File" },
+    ],
     productMetafields: [
       { field: "test_data.binding_mount", type: "single_line_text" },
       { field: "test_data.snowboard_length", type: "dimension" },

@@ -37,14 +37,20 @@ const Card1 = ({ product }: ProductProps) => {
     <div className="w-full h-full relative rounded-lg overflow-hidden border border-gray-200 shadow-md group">
       {/* Image Zoom on Hover */}
       <div className="w-full h-full relative transition-transform duration-300 group-hover:scale-105">
-        <Image
-          src={featuredImage?.originalSrc ?? ""}
-          alt={featuredImage?.altText ?? title}
-          fill
-          className="object-contain select-none pointer-events-none"
-          sizes="(max-width: 768px) 100vw, 33vw"
-          priority
-        />
+        {featuredImage?.originalSrc ? (
+          <Image
+            src={featuredImage.originalSrc}
+            alt={featuredImage.altText ?? title}
+            fill
+            className="object-contain select-none pointer-events-none"
+            sizes="(max-width: 768px) 100vw, 33vw"
+            priority
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <span className="text-gray-400 text-sm">No Image</span>
+          </div>
+        )}
       </div>
 
       {/* Price + CTA Overlay */}
