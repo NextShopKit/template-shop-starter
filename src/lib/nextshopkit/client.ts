@@ -9,7 +9,7 @@ import {
 const client = createShopifyClient({
   shop: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!,
   token: process.env.NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN!,
-  apiVersion: "2025-01",
+  apiVersion: "2025-04",
   enableMemoryCache: true,
   defaultCacheTtl: 300,
   enableVercelCache: true,

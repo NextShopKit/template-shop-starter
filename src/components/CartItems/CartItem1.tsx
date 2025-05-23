@@ -73,7 +73,7 @@ const CartItem1 = ({ line }: CartItem1Props) => {
           setValue={(value) => handleUpdateQuantity(line.id, value)}
           loading={loading}
           size="sm"
-          min={1}
+          min={0}
           max={10}
         />
       </div>

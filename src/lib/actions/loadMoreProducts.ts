@@ -45,7 +45,7 @@ export async function loadMoreProducts({
     }
 
     // Extract only the new products (skip the ones we already have)
-    const newProducts = result.data?.slice(currentProductCount) || [];
+    const newProducts = result.products?.slice(currentProductCount) || [];
 
     return {
       success: true,

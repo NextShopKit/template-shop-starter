@@ -6,8 +6,9 @@ export default async function Home() {
     collectionHandle: "home-page",
     includeProducts: true,
   });
+  console.log("result", result);
   const {
-    data,
+    products,
     error,
     pageInfo,
     collectionMetafields,
@@ -20,7 +21,7 @@ export default async function Home() {
       <div className="page-container">
         <h1 className="mt-6 mb-2 px-4 relative">Featured products</h1>
       </div>
-      <ProductGridLayout products={data} />
+      <ProductGridLayout products={products} />
     </>
   );
 }

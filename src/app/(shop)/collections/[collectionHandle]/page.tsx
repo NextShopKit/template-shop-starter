@@ -127,12 +127,12 @@ export default async function CollectionPage({
   const {
     collection,
     collectionMetafields,
-    data,
+    products,
     error,
     availableFilters,
     pageInfo,
   } = collectionData;
-  console.log("collectionData", collectionData);
+
   if (error) {
     return (
       <div className="page-container py-6">
@@ -187,9 +187,9 @@ export default async function CollectionPage({
             )}
           </div>
         </div>
-        {data && data.length > 0 ? (
+        {products && products.length > 0 ? (
           <ProductGridWithInfiniteScroll
-            initialProducts={data}
+            initialProducts={products}
             pageInfo={pageInfo}
             collectionHandle={collectionHandle}
             filters={filters}

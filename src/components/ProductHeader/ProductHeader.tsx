@@ -129,7 +129,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
               setValue={setQuantity}
               loading={loading}
               size="md"
-              min={1}
+              min={0}
               max={10}
             />
           </div>

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export default function QuantitySelector({
   value,
   setValue,
-  min = 1,
+  min = 0,
   max = 99,
   loading = false,
   size = "md",
