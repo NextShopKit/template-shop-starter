@@ -1,27 +1,13 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Search } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { useCart } from "@nextshopkit/pro-development/client";
+import SearchInput from "@/components/SearchInput/SearchInput";
 
 export default function Navbar() {
-  const [query, setQuery] = useState("");
   const { totalCount } = useCart();
-
-  const handleSearch = () => {
-    console.log("Search clicked:", query);
-    // Add your logic here
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      console.log("Enter pressed:", query);
-      // Add your logic here
-    }
-  };
   const cartCount = totalCount;
 
   return (
@@ -41,21 +27,7 @@ export default function Navbar() {
 
           {/* Search Bar (Desktop) */}
           <div className="hidden sm:flex items-center flex-1 max-w-md mx-auto">
-            <Input
-              type="search"
-              placeholder="Search products..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="rounded-none rounded-l-md border-r-0"
-            />
-            <Button
-              type="button"
-              onClick={handleSearch}
-              className="rounded-none rounded-r-md cursor-pointer"
-            >
-              <Search className="w-4 h-4" />
-            </Button>
+            <SearchInput placeholder="Search products..." className="flex-1" />
           </div>
 
           {/* Cart */}
@@ -82,22 +54,8 @@ export default function Navbar() {
           </div>
         </div>
         {/* Search on Mobile */}
-        <div className="sm:hidden px-4 pb-3 flex items-center">
-          <Input
-            type="search"
-            placeholder="Search products..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="rounded-none rounded-l-md border-r-0"
-          />
-          <Button
-            type="button"
-            onClick={handleSearch}
-            className="rounded-none rounded-r-md cursor-pointer"
-          >
-            <Search className="w-4 h-4" />
-          </Button>
+        <div className="sm:hidden px-4 pb-3">
+          <SearchInput placeholder="Search products..." />
         </div>
       </div>
     </header>

@@ -3,9 +3,9 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FilterGroup } from "@nextshopkit/pro-development";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import PriceSlider from "./PriceSlider";
 
 interface FilterSidebarProps {
@@ -19,9 +19,21 @@ const FilterSidebar = ({
 }: FilterSidebarProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const [expandedFilters, setExpandedFilters] = useState<Set<string>>(
     new Set(availableFilters.map((filter) => filter.id))
   );
+
+  // Memoize the filter state signature to detect changes
+  const filterSignature = useMemo(() => {
+    return JSON.stringify(currentFilters);
+  }, [currentFilters]);
+
+  // Reset expanded filters when available filters change
+  useEffect(() => {
+    setExpandedFilters(new Set(availableFilters.map((filter) => filter.id)));
+  }, [availableFilters]);
 
   const toggleFilter = (filterId: string) => {
     const newExpanded = new Set(expandedFilters);
@@ -91,7 +103,15 @@ const FilterSidebar = ({
         .forEach((value) => params.append(filterKey, value));
     }
 
-    const newUrl = `?${params.toString()}`;
+    // Preserve the query parameter if we're on search page
+    if (pathname === "/search") {
+      const currentQuery = searchParams.get("query");
+      if (currentQuery) {
+        params.set("query", currentQuery);
+      }
+    }
+
+    const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl, { scroll: false });
   };
 
@@ -109,13 +129,31 @@ const FilterSidebar = ({
       params.append(filterKey, priceValue);
     }
 
-    const newUrl = `?${params.toString()}`;
+    // Preserve the query parameter if we're on search page
+    if (pathname === "/search") {
+      const currentQuery = searchParams.get("query");
+      if (currentQuery) {
+        params.set("query", currentQuery);
+      }
+    }
+
+    const newUrl = `${pathname}?${params.toString()}`;
     router.push(newUrl, { scroll: false });
   };
 
   const clearAllFilters = () => {
     const params = new URLSearchParams();
-    router.push(`?${params.toString()}`, { scroll: false });
+
+    // Preserve the query parameter if we're on search page
+    if (pathname === "/search") {
+      const currentQuery = searchParams.get("query");
+      if (currentQuery) {
+        params.set("query", currentQuery);
+      }
+    }
+
+    const newUrl = `${pathname}?${params.toString()}`;
+    router.push(newUrl, { scroll: false });
   };
 
   const getSelectedValues = (filterId: string): string[] => {
@@ -145,15 +183,45 @@ const FilterSidebar = ({
           }
         });
       }
-      case filterId === "filter.v.price":
+      case filterId === "filter.v.price": {
         filterKey = "filter_price";
-        break;
-      case filterId.startsWith("filter.p.tag."):
+        const values = currentFilters[filterKey];
+        if (Array.isArray(values)) return values;
+        if (typeof values === "string") return [values];
+        return [];
+      }
+      case filterId.startsWith("filter.p.tag."): {
         filterKey = "filter_productTag";
-        break;
-      case filterId.startsWith("filter.p.product_type."):
+        const urlValues = currentFilters[filterKey];
+        const urlValuesArray = Array.isArray(urlValues)
+          ? urlValues
+          : typeof urlValues === "string"
+          ? [urlValues]
+          : [];
+
+        // Map URL values back to filter value IDs by finding matching labels
+        const filter = availableFilters?.find((f) => f.id === filterId);
+        return urlValuesArray.map((urlValue) => {
+          const filterValue = filter?.values.find((v) => v.label === urlValue);
+          return filterValue?.id || urlValue;
+        });
+      }
+      case filterId.startsWith("filter.p.product_type."): {
         filterKey = "filter_productType";
-        break;
+        const urlValues = currentFilters[filterKey];
+        const urlValuesArray = Array.isArray(urlValues)
+          ? urlValues
+          : typeof urlValues === "string"
+          ? [urlValues]
+          : [];
+
+        // Map URL values back to filter value IDs by finding matching labels
+        const filter = availableFilters?.find((f) => f.id === filterId);
+        return urlValuesArray.map((urlValue) => {
+          const filterValue = filter?.values.find((v) => v.label === urlValue);
+          return filterValue?.id || urlValue;
+        });
+      }
       case filterId.startsWith("filter.p.m."): {
         // Handle product metafields: filter.p.m.namespace.key
         const parts = filterId.split(".");
@@ -178,7 +246,7 @@ const FilterSidebar = ({
             return filterValue?.id || `${filterId}.${urlValue}`;
           });
         }
-        break;
+        return [];
       }
       case filterId.startsWith("filter.v.option."): {
         const optionName = filterId.replace("filter.v.option.", "");
@@ -198,12 +266,14 @@ const FilterSidebar = ({
           return filterValue?.id || urlValue;
         });
       }
+      default: {
+        // Fallback for any other filter types
+        const values = currentFilters[filterKey];
+        if (Array.isArray(values)) return values;
+        if (typeof values === "string") return [values];
+        return [];
+      }
     }
-
-    const values = currentFilters[filterKey];
-    if (Array.isArray(values)) return values;
-    if (typeof values === "string") return [values];
-    return [];
   };
 
   // Get current price range from URL
@@ -238,7 +308,7 @@ const FilterSidebar = ({
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full" key={filterSignature}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold">Filters</h3>
         {hasActiveFilters && (
@@ -299,7 +369,7 @@ const FilterSidebar = ({
 
                       return (
                         <div
-                          key={value.id}
+                          key={`${filter.id}-${value.id}-${filterSignature}`}
                           className="flex items-center space-x-2"
                         >
                           <Checkbox
