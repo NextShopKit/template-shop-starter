@@ -1,12 +1,12 @@
 "use client";
-import { Product } from "@nextshopkit/pro-development";
+import { Product } from "@nextshopkit/sdk";
 import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { useCart } from "@nextshopkit/pro-development/client";
+import { useCart } from "@nextshopkit/sdk/client";
 import { useRouter } from "next/navigation";
 
 interface ProductProps {

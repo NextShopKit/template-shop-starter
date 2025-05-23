@@ -4,7 +4,7 @@ import {
   FetchProductResult,
   GetCollectionOptions,
   FetchCollectionResult,
-} from "@nextshopkit/pro-development";
+} from "@nextshopkit/sdk";
 
 const client = createShopifyClient({
   shop: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!,
@@ -18,22 +18,10 @@ const client = createShopifyClient({
 
 export const getProduct = async (
   args: GetProductOptions
-): Promise<FetchProductResult> =>
-  client.getProduct(args, {
-    cacheTtl: 60,
-    revalidate: 60,
-    useMemoryCache: true,
-    useVercelCache: true,
-  });
+): Promise<FetchProductResult> => client.getProduct(args);
 
 export const getCollection = async (
   args: GetCollectionOptions
-): Promise<FetchCollectionResult> =>
-  client.getCollection(args, {
-    cacheTtl: 300,
-    revalidate: 300,
-    useMemoryCache: true,
-    useVercelCache: true,
-  });
+): Promise<FetchCollectionResult> => client.getCollection(args);
 
 export default client;

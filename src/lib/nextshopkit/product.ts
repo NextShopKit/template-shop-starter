@@ -1,6 +1,6 @@
 "use server";
 
-import { GetProductOptions } from "@nextshopkit/pro-development";
+import { GetProductOptions } from "@nextshopkit/sdk";
 import { getProduct } from "./client";
 
 export async function fetchProduct(

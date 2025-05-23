@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import type { Product, ProductsPageInfo } from "@nextshopkit/pro-development";
+import type { Product, ProductsPageInfo } from "@nextshopkit/sdk";
 
 // Sort options configuration
 const SORT_OPTIONS = [

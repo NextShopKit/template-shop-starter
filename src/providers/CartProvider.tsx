@@ -1,7 +1,7 @@
 "use client";
 import client from "@/lib/nextshopkit/client";
 import React from "react";
-import { CartProvider as LibCartProvider } from "@nextshopkit/pro-development/client";
+import { CartProvider as LibCartProvider } from "@nextshopkit/sdk/client";
 
 interface CartProviderProps {
   children: React.ReactNode;

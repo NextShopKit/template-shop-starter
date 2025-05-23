@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { useCart } from "@nextshopkit/pro-development/client";
+import { useCart } from "@nextshopkit/sdk/client";
 import SearchInput from "@/components/SearchInput/SearchInput";
 
 export default function Navbar() {

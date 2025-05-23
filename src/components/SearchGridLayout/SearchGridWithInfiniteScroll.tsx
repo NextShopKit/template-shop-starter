@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { loadMoreSearchResults } from "@/lib/actions/loadMoreSearchResults";
 
-import type { Product, ProductsPageInfo } from "@nextshopkit/pro-development";
+import type { Product, ProductsPageInfo } from "@nextshopkit/sdk";
 
 // Sort options configuration
 const SORT_OPTIONS = [

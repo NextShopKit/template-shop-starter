@@ -1,4 +1,4 @@
-import { Product } from "@nextshopkit/pro-development";
+import { Product } from "@nextshopkit/sdk";
 import Card1 from "../ProductCards/Card1";
 
 interface ProductGridLayoutProps {

@@ -14,7 +14,7 @@
     "@consentry/core": "^0.1.8",
     "@consentry/next": "^0.1.20",
     "@consentry/ui": "^0.1.9",
-    "@nextshopkit/sdk": "^0.4.20",
+    "@nextshopkit/sdk": "^0.5.1",
     "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-select": "^2.2.5",
@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@nextshopkit/pro-development": "file:.yalc/@nextshopkit/pro-development",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useCart } from "@nextshopkit/pro-development/client";
+import { useCart } from "@nextshopkit/sdk/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CreditCard, ShoppingBasket, Trash2, X } from "lucide-react";

@@ -1,5 +1,5 @@
 "use server";
-import { GetCollectionOptions } from "@nextshopkit/pro-development";
+import { GetCollectionOptions } from "@nextshopkit/sdk";
 import { getCollection } from "./client";
 
 // https://apps.shopify.com/search-and-discovery

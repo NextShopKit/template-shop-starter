@@ -1,7 +1,7 @@
 "use server";
 
 import { fetchCollectionWithMetafields } from "@/lib/nextshopkit/collection";
-import type { Product, ProductsPageInfo } from "@nextshopkit/pro-development";
+import type { Product, ProductsPageInfo } from "@nextshopkit/sdk";
 
 interface LoadMoreProductsParams {
   collectionHandle: string;

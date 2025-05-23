@@ -1,9 +1,9 @@
-import { CartLine } from "@nextshopkit/pro-development";
+import { CartLine } from "@nextshopkit/sdk";
 import Image from "next/image";
 import React from "react";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
-import { useCart } from "@nextshopkit/pro-development/client";
+import { useCart } from "@nextshopkit/sdk/client";
 import Link from "next/link";
 import QuantitySelector from "../Reusables/QuantitySelector";
 

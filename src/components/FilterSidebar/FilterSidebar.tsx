@@ -4,7 +4,7 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
-import { FilterGroup } from "@nextshopkit/pro-development";
+import { FilterGroup } from "@nextshopkit/sdk";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import PriceSlider from "./PriceSlider";
 

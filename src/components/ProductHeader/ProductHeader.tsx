@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Product } from "@nextshopkit/pro-development";
-import { useCart } from "@nextshopkit/pro-development/client";
+import { Product } from "@nextshopkit/sdk";
+import { useCart } from "@nextshopkit/sdk/client";
 import { ChevronRight, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
