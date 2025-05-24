@@ -22,10 +22,7 @@ export default function SearchInput({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // Only get initial query if we're on the search page
-  const initialQuery =
-    pathname === "/search" ? searchParams.get("query") || "" : "";
-  const [searchValue, setSearchValue] = useState(initialQuery);
+  const [searchValue, setSearchValue] = useState("");
 
   // Debounced search function - triggers actual search after 300ms
   const debouncedSearch = useCallback(
@@ -87,20 +84,15 @@ export default function SearchInput({
     router.push("/search");
   };
 
-  // Update input value when URL query changes (for back/forward navigation)
+  // Sync searchValue with URL after mount
   useEffect(() => {
     if (pathname === "/search") {
-      const urlQuery = searchParams.get("query") || "";
-      if (urlQuery !== searchValue) {
-        setSearchValue(urlQuery);
-      }
+      setSearchValue(searchParams.get("query") || "");
     } else {
-      // Clear search value when not on search page
-      if (searchValue) {
-        setSearchValue("");
-      }
+      setSearchValue("");
     }
-  }, [searchParams, pathname, searchValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams]);
 
   // Cleanup debounced function on unmount
   useEffect(() => {
