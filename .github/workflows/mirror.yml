@@ -1,0 +1,29 @@
+name: Mirror to Personal Repo
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false # ← prevents GitHub's token from overriding ours
+          fetch-depth: 0 # ← fetch all history for all branches and tags
+
+      - name: Push to NEDDL/nextshopkit-template-shop-starter
+        env:
+          TARGET_REPO_TOKEN: ${{ secrets.TARGET_REPO_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # remove GitHub's default auth
+          git config --unset-all http.https://github.com/.extraheader || true
+
+          git remote add mirror https://x-access-token:${TARGET_REPO_TOKEN}@github.com/NEDDL/nextshopkit-template-shop-starter.git
+          git push mirror main --force
