@@ -24,34 +24,32 @@ export default function SearchInput({
 
   const [searchValue, setSearchValue] = useState("");
 
-  // Debounced search function - triggers actual search after 300ms
+  // Debounced search function - only update URL after typing stops
   const debouncedSearch = useCallback(
     debounce((query: string) => {
-      if (query.trim()) {
-        // Use router.push for final search to add to history
-        router.push(
-          `/search?query=${encodeURIComponent(query.trim())}&execute=true`
-        );
+      if (pathname !== "/search") {
+        // Not on search page, push to /search
+        if (query.trim()) {
+          router.push(`/search?query=${encodeURIComponent(query.trim())}`);
+        } else {
+          router.push("/search");
+        }
       } else {
-        router.push("/search");
+        // Already on /search, just update query param
+        if (query.trim()) {
+          router.replace(`/search?query=${encodeURIComponent(query.trim())}`);
+        } else {
+          router.replace("/search");
+        }
       }
     }, 300),
-    [router]
+    [router, pathname]
   );
 
-  // Handle input change - immediate URL update + debounced search
+  // Handle input change - only update local state, debounce URL update
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
-
-    // Immediate URL update without triggering full search
-    if (value.trim()) {
-      router.replace(`/search?query=${encodeURIComponent(value.trim())}`);
-    } else {
-      router.replace("/search");
-    }
-
-    // Debounced search execution
     debouncedSearch(value);
   };
 

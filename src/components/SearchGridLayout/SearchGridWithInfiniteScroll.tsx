@@ -55,7 +55,6 @@ export default function SearchGridWithInfiniteScroll({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Progressive enhancement - detect JS availability
   useEffect(() => {
     setHasJavaScript(true);
   }, []);

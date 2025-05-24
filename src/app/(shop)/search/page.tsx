@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { Search } from "lucide-react";
 import { fetchSearchResults } from "@/lib/nextshopkit/search";
 import SearchPageClient from "@/components/SearchGridLayout/SearchPageClient";
@@ -46,55 +45,6 @@ function FilterSidebarSkeleton() {
           <div className="animate-pulse bg-gray-200 h-10 w-full rounded"></div>
           <div className="animate-pulse bg-gray-200 h-10 w-full rounded"></div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function SearchResultsSkeleton() {
-  return (
-    <div>
-      {/* Sort Controls Skeleton */}
-      <div className="flex justify-between items-center mb-6">
-        <div className="animate-pulse bg-gray-200 h-5 w-32 rounded"></div>
-        <div className="animate-pulse bg-gray-200 h-10 w-48 rounded"></div>
-      </div>
-
-      {/* Products Grid Skeleton */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {[...Array(9)].map((_, i) => (
-          <div key={i} className="space-y-3">
-            {/* Product Image */}
-            <div className="animate-pulse bg-gray-200 aspect-square rounded-lg"></div>
-
-            {/* Product Title */}
-            <div className="space-y-2">
-              <div className="animate-pulse bg-gray-200 h-5 w-full rounded"></div>
-              <div className="animate-pulse bg-gray-200 h-5 w-3/4 rounded"></div>
-            </div>
-
-            {/* Product Price */}
-            <div className="animate-pulse bg-gray-200 h-6 w-20 rounded"></div>
-
-            {/* Product Variants/Options */}
-            <div className="flex space-x-2">
-              {[...Array(3)].map((_, j) => (
-                <div
-                  key={j}
-                  className="animate-pulse bg-gray-200 h-8 w-8 rounded"
-                ></div>
-              ))}
-            </div>
-
-            {/* Add to Cart Button */}
-            <div className="animate-pulse bg-gray-200 h-10 w-full rounded"></div>
-          </div>
-        ))}
-      </div>
-
-      {/* Load More Button Skeleton */}
-      <div className="flex justify-center">
-        <div className="animate-pulse bg-gray-200 h-10 w-32 rounded"></div>
       </div>
     </div>
   );
@@ -213,11 +163,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         </div>
       </div>
     );
-  }
-
-  // If we have a query but no execute flag, show typing indicator
-  if (query.trim() && !shouldExecuteSearch) {
-    return <TypingIndicator query={query} />;
   }
 
   const filters = parseFilters(urlParams);
