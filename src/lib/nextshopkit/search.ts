@@ -21,12 +21,7 @@ interface FetchSearchResultInterface {
 }
 
 export const getSearchResult = async (args: any): Promise<any> =>
-  client.getSearchResult(args, {
-    cacheTtl: 60,
-    revalidate: 60,
-    useMemoryCache: true,
-    useVercelCache: true,
-  });
+  client.getSearchResult(args);
 
 export const fetchSearchResults = async ({
   query,

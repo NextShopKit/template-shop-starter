@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCart } from "@nextshopkit/sdk/client";
 import SearchInput from "@/components/SearchInput/SearchInput";
+import { Suspense } from "react";
 
 export default function Navbar() {
   const { totalCount } = useCart();
@@ -27,7 +28,16 @@ export default function Navbar() {
 
           {/* Search Bar (Desktop) */}
           <div className="hidden sm:flex items-center flex-1 max-w-md mx-auto">
-            <SearchInput placeholder="Search products..." className="flex-1" />
+            <Suspense
+              fallback={
+                <div className="flex-1 h-10 bg-gray-100 rounded animate-pulse"></div>
+              }
+            >
+              <SearchInput
+                placeholder="Search products..."
+                className="flex-1"
+              />
+            </Suspense>
           </div>
 
           {/* Cart */}
@@ -55,7 +65,13 @@ export default function Navbar() {
         </div>
         {/* Search on Mobile */}
         <div className="sm:hidden px-4 pb-3">
-          <SearchInput placeholder="Search products..." />
+          <Suspense
+            fallback={
+              <div className="h-10 bg-gray-100 rounded animate-pulse"></div>
+            }
+          >
+            <SearchInput placeholder="Search products..." />
+          </Suspense>
         </div>
       </div>
     </header>

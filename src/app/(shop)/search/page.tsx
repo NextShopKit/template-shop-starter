@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import { Search } from "lucide-react";
 import { fetchSearchResults } from "@/lib/nextshopkit/search";
-import FilterSidebar from "@/components/FilterSidebar/FilterSidebar";
-import SearchGridWithInfiniteScroll from "@/components/SearchGridLayout/SearchGridWithInfiniteScroll";
+import SearchPageClient from "@/components/SearchGridLayout/SearchPageClient";
+
+export const dynamic = "force-dynamic";
 
 interface SearchPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -272,37 +273,16 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   return (
-    <div className="page-container flex gap-8 py-6">
-      <div className="w-1/4">
-        <FilterSidebar
-          availableFilters={availableFilters}
-          currentFilters={urlParams}
-        />
-      </div>
-      <div className="w-3/4">
-        {products && products.length > 0 ? (
-          <SearchGridWithInfiniteScroll
-            initialProducts={products}
-            pageInfo={pageInfo}
-            searchQuery={query}
-            filters={filters}
-            currentFilters={urlParams}
-            currentLimit={limit}
-            currentSort={sortParam}
-          />
-        ) : (
-          <div className="text-center py-12">
-            <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-            <h2 className="text-lg font-semibold mb-2">No products found</h2>
-            <p className="text-gray-600">
-              {filters.length > 0
-                ? `No results found for "${query}" with the current filters. Try adjusting your filters or search term.`
-                : `No results found for "${query}". Try different keywords or check the spelling.`}
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
+    <SearchPageClient
+      products={products}
+      pageInfo={pageInfo}
+      availableFilters={availableFilters}
+      urlParams={urlParams}
+      query={query}
+      filters={filters}
+      limit={limit}
+      sortParam={sortParam}
+    />
   );
 }
 
