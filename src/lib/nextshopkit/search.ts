@@ -1,25 +1,5 @@
 import client from "./client";
 
-interface GetSearchOptionsInterface {
-  query: string;
-  limit?: number;
-  sortKey?: "TITLE" | "PRICE" | "BEST_SELLING" | "CREATED";
-  reverse?: boolean;
-  cursor?: string;
-  productFilters?: any[];
-  types?: string[];
-  unavailableProducts?: "SHOW" | "HIDE" | "LAST";
-}
-
-interface FetchSearchResultInterface {
-  products: any[];
-  pageInfo: any;
-  availableFilters?: any[];
-  totalCount?: number;
-  searchTerm: string;
-  error: string | null;
-}
-
 export const getSearchResult = async (args: any): Promise<any> =>
   client.getSearchResult(args);
 

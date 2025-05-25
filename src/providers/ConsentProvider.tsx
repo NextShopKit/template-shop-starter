@@ -2,19 +2,28 @@
 import { ConsentConfig, ConsentManagerProvider } from "@consentry/next";
 import ConsentManager from "@consentry/ui";
 
+/**
+ * Consent management provider for the NextShopKit starter template
+ * Handles GDPR/privacy compliance with cookie consent management
+ * Pre-configured for Google Analytics integration
+ */
 const ConsentProvider = ({ children }: { children: React.ReactNode }) => {
-  const gtag = "G-XXXXXXXXXX";
+  const gtag = "G-XXXXXXXXXX"; // Replace with your Google Analytics ID
 
-  // Google Analytics pre-configured.
-  // Add the gtag above.
+  /**
+   * Consent configuration with default settings
+   * Functional cookies enabled by default, others require user consent
+   * Includes commented Google Analytics setup for easy activation
+   */
   const consentConfig: ConsentConfig = {
     defaults: {
-      functional: true,
-      performance: false,
-      advertising: false,
-      social: false,
+      functional: true, // Essential cookies - always enabled
+      performance: false, // Analytics cookies - requires consent
+      advertising: false, // Marketing cookies - requires consent
+      social: false, // Social media cookies - requires consent
     },
     scripts: [
+      // Uncomment and configure these scripts for Google Analytics
       //   {
       //     id: "gtag-js",
       //     category: "functional",
@@ -48,6 +57,7 @@ const ConsentProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <ConsentManagerProvider config={consentConfig}>
+        {/* Consent banner UI - positioned at bottom, light theme */}
         <ConsentManager mode="bottom" dark={false} />
         {children}
       </ConsentManagerProvider>

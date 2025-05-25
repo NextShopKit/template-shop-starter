@@ -40,6 +40,13 @@ interface SearchGridWithInfiniteScrollProps {
   currentSort?: string;
 }
 
+/**
+ * SearchGridWithInfiniteScroll for NextShopKit starter template.
+ * - Handles infinite scroll and SSR fallback for search result grids
+ * - Integrates with NextShopKit's product search, filtering, and sorting
+ * - Deduplicates products, supports sort/filter, and progressive enhancement (JS/no-JS)
+ * - Used for search result pages
+ */
 export default function SearchGridWithInfiniteScroll({
   initialProducts,
   pageInfo,
@@ -117,7 +124,11 @@ export default function SearchGridWithInfiniteScroll({
     [currentFilters, router]
   );
 
-  // Fetch more products (infinite scroll or button)
+  /**
+   * Fetch more products (infinite scroll or button)
+   * Uses NextShopKit's loadMoreSearchResults action for SSR/ISR compatibility
+   * Deduplicates products by id, updates state, URL, and scroll position
+   */
   const loadMore = useCallback(async () => {
     if (!currentPageInfo?.hasNextPage || loading || !searchQuery.trim()) return;
     setLoading(true);

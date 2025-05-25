@@ -14,6 +14,13 @@ interface ProductHeaderProps {
   product: Product;
 }
 
+/**
+ * ProductHeader for the NextShopKit starter template.
+ * - Renders a full product detail view (PDP) with images, variants, price, and add-to-cart
+ * - Integrates with NextShopKit's product and cart state
+ * - Handles variant selection, quantity, and availability
+ * - Responsive, mobile-first, and accessible
+ */
 const ProductHeader = ({ product }: ProductHeaderProps) => {
   const { title, featuredImage, images, metafields, variants } = product;
   const [currentImage, setCurrentImage] = React.useState(featuredImage);
@@ -24,6 +31,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
   const { addProducts } = useCart();
   const [loading, setLoading] = React.useState(false);
 
+  // Add selected variant/quantity to cart (NextShopKit action)
   const handleAddToCart = async (variantId: string) => {
     try {
       setLoading(true);
@@ -37,6 +45,10 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
 
   return (
     <div className="page-container px-4 sm:px-6">
+      {/*
+        Breadcrumb navigation for PDP context
+        (links back to all products)
+      */}
       <nav aria-label="Breadcrumb" className="w-full pt-4">
         <ol className="flex items-center gap-2 py-4 text-sm text-muted-foreground">
           <li>
@@ -59,11 +71,14 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
         </ol>
       </nav>
 
-      {/* Mobile-first responsive layout */}
+      {/*
+        Main product layout: images (left), details (right)
+        - Mobile: stacked, Desktop: side-by-side
+      */}
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 py-4">
         {/* Product Images - full width on mobile, half on desktop */}
         <div className="w-full lg:w-1/2">
-          {/* Main product image */}
+          {/* Main product image with zoom-on-hover */}
           <div className="aspect-square relative overflow-hidden rounded-lg border border-gray-200 shadow-md group">
             <div className="w-full h-full relative transition-transform duration-300 group-hover:scale-105">
               <Image
@@ -77,7 +92,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
             </div>
           </div>
 
-          {/* Image gallery thumbnails */}
+          {/* Image gallery thumbnails (if multiple images) */}
           {images && images.length > 1 && (
             <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
               {images?.map((image, index) => (
@@ -103,13 +118,14 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
         <div className="w-full lg:w-1/2">
           <h1 className="text-2xl sm:text-3xl font-bold mb-3">{title}</h1>
 
+          {/* Product short description from Shopify metafields */}
           {metafields?.general?.shortDescription && (
             <p className="text-gray-600 text-sm sm:text-base mb-6 leading-relaxed">
               {metafields?.general?.shortDescription}
             </p>
           )}
 
-          {/* Price */}
+          {/* Price display for selected variant */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6">
             <span className="text-lg sm:text-xl font-semibold text-gray-700">
               Price:
@@ -119,7 +135,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
             </span>
           </div>
 
-          {/* Variants */}
+          {/* Variant selector (if multiple variants) */}
           {variants.length > 1 && (
             <div className="mb-6">
               <h2 className="text-lg font-semibold mb-3">Variants</h2>
@@ -172,7 +188,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
             </Button>
           </div>
 
-          {/* Availability status */}
+          {/* Availability status for selected variant */}
           <div className="mt-4">
             <span
               className={cn(

@@ -38,6 +38,13 @@ interface ProductGridWithInfiniteScrollProps {
   currentSort?: string;
 }
 
+/**
+ * ProductGridWithInfiniteScroll for NextShopKit starter template.
+ * - Handles infinite scroll and SSR fallback for product grids
+ * - Integrates with NextShopKit's product/collection data and filtering
+ * - Supports sort, filter, and progressive enhancement (JS/no-JS)
+ * - Used for collection and search result pages
+ */
 export default function ProductGridWithInfiniteScroll({
   initialProducts,
   pageInfo,
@@ -47,6 +54,7 @@ export default function ProductGridWithInfiniteScroll({
   currentLimit,
   currentSort,
 }: ProductGridWithInfiniteScrollProps) {
+  // Local state for products, page info, and loading
   const [products, setProducts] = useState(initialProducts);
   const [currentPageInfo, setCurrentPageInfo] = useState(pageInfo);
   const [loading, setLoading] = useState(false);
@@ -97,9 +105,9 @@ export default function ProductGridWithInfiniteScroll({
     }
   }, [currentLimit, products.length, collectionHandle]);
 
+  // Update the URL with new limit (for SEO/back nav) without navigation
   const updateURLQuietly = useCallback(
     (newLimit: number) => {
-      // Update URL without triggering navigation
       const params = new URLSearchParams();
       searchParams.forEach((value, key) => {
         if (key !== "limit") {
@@ -114,6 +122,7 @@ export default function ProductGridWithInfiniteScroll({
     [searchParams]
   );
 
+  // Handle sort dropdown change
   const handleSortChange = useCallback(
     (sortValue: string) => {
       const params = new URLSearchParams();
@@ -141,6 +150,11 @@ export default function ProductGridWithInfiniteScroll({
     [currentFilters, router]
   );
 
+  /**
+   * Load more products (infinite scroll or button)
+   * Uses NextShopKit's loadMoreProducts action for SSR/ISR compatibility
+   * Updates state, URL, and scroll position
+   */
   const loadMore = useCallback(async () => {
     if (!currentPageInfo?.hasNextPage || loading) {
       return;
@@ -212,7 +226,7 @@ export default function ProductGridWithInfiniteScroll({
     currentSort,
   ]);
 
-  // Infinite scroll handler
+  // Infinite scroll handler (JS only)
   useEffect(() => {
     if (!hasJavaScript) return;
 

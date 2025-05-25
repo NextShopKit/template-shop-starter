@@ -6,6 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/**
+ * QuantitySelector for NextShopKit starter template.
+ * - Used in cart, product, and quick-add UIs
+ * - Handles min/max, disables during loading, and is fully accessible
+ * - Integrates with NextShopKit's cart/product state via setValue
+ */
 export default function QuantitySelector({
   value,
   setValue,
@@ -21,6 +27,7 @@ export default function QuantitySelector({
   loading?: boolean;
   size?: "sm" | "md" | "lg";
 }) {
+  // Responsive sizing for buttons/inputs
   const sizeClasses = {
     sm: {
       button: "h-8 w-8 text-sm",
@@ -36,6 +43,7 @@ export default function QuantitySelector({
     },
   };
 
+  // Handle direct input changes (with clamping)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
     if (!isNaN(val)) setValue(Math.min(max, Math.max(min, val)));
@@ -43,6 +51,7 @@ export default function QuantitySelector({
 
   return (
     <div className="flex items-center gap-2">
+      {/* Decrement button */}
       <Button
         variant="outline"
         size="icon"
@@ -54,6 +63,7 @@ export default function QuantitySelector({
         <Minus className="w-4 h-4" />
       </Button>
 
+      {/* Numeric input field */}
       <Input
         type="number"
         value={value}
@@ -67,6 +77,7 @@ export default function QuantitySelector({
         )}
       />
 
+      {/* Increment button */}
       <Button
         variant="outline"
         size="icon"

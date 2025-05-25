@@ -13,10 +13,13 @@ interface SearchInputProps {
   autoFocus?: boolean;
 }
 
-// This component renders a search input that lets users search for products from any page.
-// It updates the URL and routes to the /search page after the user stops typing (debounced),
-// so the search results update smoothly without lag or unnecessary reloads.
-
+/**
+ * SearchInput for NextShopKit starter template.
+ * - Debounced, accessible search input for product search
+ * - Updates URL and routes to /search with query param
+ * - Integrates with NextShopKit's search page and SSR/ISR
+ * - Used in navbar, sidebar, and mobile search UIs
+ */
 export default function SearchInput({
   placeholder = "Search products...",
   className = "",
@@ -26,13 +29,15 @@ export default function SearchInput({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // Local state to keep track of the current value in the search input
+  // Local state for the current input value
   const [searchValue, setSearchValue] = useState("");
 
-  // Debounced function: waits until the user stops typing for 300ms before updating the URL.
-  // This prevents the app from routing on every keystroke, which can cause lag, especially in production.
-  // If the user is not on the /search page, it pushes to /search with the query param.
-  // If already on /search, it just updates the query param in the URL (without adding to browser history).
+  /**
+   * Debounced search handler:
+   * - Waits 300ms after typing before updating the URL
+   * - Navigates to /search with query param, or updates query param if already there
+   * - Prevents excessive navigation and improves UX
+   */
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       if (pathname !== "/search") {
@@ -54,16 +59,18 @@ export default function SearchInput({
     [router, pathname]
   );
 
-  // Called whenever the user types in the input.
-  // Updates local state immediately, and triggers the debounced search function.
+  // Handle input changes and trigger debounced search
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
     debouncedSearch(value);
   };
 
-  // Called when the user submits the form (e.g. presses Enter or clicks search).
-  // Cancels any pending debounced search and immediately routes to /search with the query.
+  /**
+   * Immediate search on submit (Enter or search button):
+   * - Cancels debounce and navigates instantly
+   * - Used for accessibility and keyboard support
+   */
   const handleSearch = () => {
     debouncedSearch.cancel();
 
@@ -76,7 +83,7 @@ export default function SearchInput({
     }
   };
 
-  // Handles the Enter key in the input, so pressing Enter triggers an immediate search.
+  // Handle Enter key for instant search
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -84,15 +91,18 @@ export default function SearchInput({
     }
   };
 
-  // Clears the search input and routes to the base /search page (no query param).
+  // Clear the search input and reset to base /search page
   const clearSearch = () => {
     debouncedSearch.cancel();
     setSearchValue("");
     router.push("/search");
   };
 
-  // Syncs the input value with the URL when the component mounts or the URL changes.
-  // This ensures the input always shows the current query when on the /search page.
+  /**
+   * Sync input value with URL param when on /search
+   * - Ensures input reflects the current query param
+   * - Resets input when navigating away
+   */
   useEffect(() => {
     if (pathname === "/search") {
       setSearchValue(searchParams.get("query") || "");
@@ -101,7 +111,7 @@ export default function SearchInput({
     }
   }, [pathname, searchParams]);
 
-  // Cleans up the debounced function when the component unmounts to avoid memory leaks.
+  // Cleanup debounce on unmount
   useEffect(() => {
     return () => {
       debouncedSearch.cancel();

@@ -7,15 +7,20 @@ import { useCart } from "@nextshopkit/sdk/client";
 import SearchInput from "@/components/SearchInput/SearchInput";
 import { Suspense } from "react";
 
+/**
+ * Main navigation component for the NextShopKit starter template
+ * Features cart integration, search functionality, and responsive design
+ * Uses NextShopKit's cart hook for real-time cart count updates
+ */
 export default function Navbar() {
-  const { totalCount } = useCart();
+  const { totalCount } = useCart(); // NextShopKit cart state
   const cartCount = totalCount;
 
   return (
     <header className="w-full border-b bg-white">
       <div className="page-container">
         <div className="mx-auto py-3 flex items-center justify-between gap-4">
-          {/* Logo */}
+          {/* Logo and main navigation */}
           <div className="flex items-center gap-4">
             <div className="text-xl font-bold">
               <Link href="/">Acme Store</Link>
@@ -26,7 +31,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Search Bar (Desktop) */}
+          {/* Search bar for desktop - uses Suspense for loading state */}
           <div className="hidden sm:flex items-center flex-1 max-w-md mx-auto">
             <Suspense
               fallback={
@@ -40,7 +45,7 @@ export default function Navbar() {
             </Suspense>
           </div>
 
-          {/* Cart */}
+          {/* Cart button with dynamic count badge */}
           <div className="relative flex items-center gap-2">
             <Link href="/cart" scroll={false}>
               <Button
@@ -53,6 +58,7 @@ export default function Navbar() {
               </Button>
             </Link>
 
+            {/* Cart count badge - only shows when items are in cart */}
             {cartCount > 0 && (
               <Badge
                 className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 text-xs px-1.5 py-0.5 rounded-full"
@@ -63,7 +69,8 @@ export default function Navbar() {
             )}
           </div>
         </div>
-        {/* Search on Mobile */}
+
+        {/* Mobile search bar */}
         <div className="sm:hidden px-4 pb-3">
           <Suspense
             fallback={

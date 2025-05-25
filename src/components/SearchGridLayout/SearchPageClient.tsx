@@ -16,6 +16,13 @@ interface SearchPageClientProps {
   sortParam?: string;
 }
 
+/**
+ * SearchPageClient for NextShopKit starter template.
+ * - Handles client-side rendering of search results, filters, and skeletons
+ * - Uses Suspense for loading fallback (skeletons)
+ * - Integrates with NextShopKit's filter and search grid components
+ * - Responsive: sidebar on desktop, filter button on mobile
+ */
 function FilterSidebarSkeleton() {
   return (
     <div className="space-y-6">

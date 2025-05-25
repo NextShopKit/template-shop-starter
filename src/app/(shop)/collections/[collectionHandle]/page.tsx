@@ -8,6 +8,11 @@ interface CollectionPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+/**
+ * Dynamic collection page for the NextShopKit starter template
+ * Handles collection display with filtering, sorting, and pagination
+ * Demonstrates advanced NextShopKit features like metafields and filters
+ */
 export default async function CollectionPage({
   params,
   searchParams,
@@ -15,6 +20,11 @@ export default async function CollectionPage({
   const { collectionHandle } = await params;
   const urlParams = await searchParams;
 
+  /**
+   * Parse URL parameters into NextShopKit filter format
+   * Supports various filter types: availability, price, product type, tags, metafields, and variant options
+   * URL format: ?filter_size=large&filter_price=10-50&filter_available=true
+   */
   const parseFilters = (params: {
     [key: string]: string | string[] | undefined;
   }) => {
@@ -41,6 +51,7 @@ export default async function CollectionPage({
               filters.push({ available: val === "true" });
               break;
             case "price":
+              // Parse price range format: "min-max" (e.g., "10-50")
               const [min, max] = val.split("-");
               filters.push({
                 price: {
@@ -59,7 +70,7 @@ export default async function CollectionPage({
               filters.push({ collection: val });
               break;
             default:
-              // Check if this is a product metafield (pattern: namespace.key)
+              // Handle product metafields (format: namespace.key)
               if (filterKey.includes(".")) {
                 const [namespace, key] = filterKey.split(".");
                 filters.push({
@@ -70,7 +81,7 @@ export default async function CollectionPage({
                   },
                 });
               } else {
-                // Handle variant options (size, color, etc.)
+                // Handle variant options (size, color, material, etc.)
                 filters.push({
                   variantOption: {
                     name: filterKey,
@@ -88,15 +99,18 @@ export default async function CollectionPage({
 
   const filters = parseFilters(urlParams);
 
-  // Extract limit from URL params (how many products should be visible)
+  // Parse pagination limit from URL with sensible defaults
   const requestedLimit = urlParams.limit
     ? parseInt(urlParams.limit as string, 10)
     : 9; // Default to 9 products
 
-  // Ensure minimum limit and reasonable maximum
+  // Ensure reasonable limits for performance
   const limit = Math.max(9, Math.min(requestedLimit, 100));
 
-  // Extract sort parameters from URL
+  /**
+   * Parse sort parameters from URL format: "SORTKEY-order"
+   * Examples: "PRICE-desc", "TITLE-asc", "BEST_SELLING-desc"
+   */
   const sortParam = urlParams.sort as string;
   const parseSortParam = (sortParam?: string) => {
     if (!sortParam) return { sortKey: undefined, reverse: undefined };
@@ -116,6 +130,7 @@ export default async function CollectionPage({
 
   const { sortKey, reverse } = parseSortParam(sortParam);
 
+  // Fetch collection data using NextShopKit with all parsed parameters
   const collectionData = await fetchCollectionWithMetafields({
     collectionHandle,
     limit,
@@ -133,6 +148,7 @@ export default async function CollectionPage({
     pageInfo,
   } = collectionData;
 
+  // Error handling for failed collection fetch
   if (error) {
     return (
       <div className="page-container py-4 px-4 sm:py-6">
@@ -148,6 +164,7 @@ export default async function CollectionPage({
     );
   }
 
+  // Handle case where collection doesn't exist
   if (!collection) {
     return (
       <div className="page-container py-4 px-4 sm:py-6">
@@ -167,9 +184,9 @@ export default async function CollectionPage({
 
   return (
     <div className="page-container py-4 px-4 sm:py-6">
-      {/* Mobile-first layout */}
+      {/* Responsive layout: mobile-first with desktop sidebar */}
       <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
-        {/* Desktop Sidebar - hidden on mobile */}
+        {/* Desktop filter sidebar - hidden on mobile */}
         <div className="hidden lg:block lg:w-1/4">
           <FilterSidebar
             availableFilters={availableFilters}
@@ -178,9 +195,9 @@ export default async function CollectionPage({
           />
         </div>
 
-        {/* Main content - full width on mobile, 3/4 on desktop */}
+        {/* Main content area */}
         <div className="w-full lg:w-3/4">
-          {/* Collection header - responsive layout */}
+          {/* Collection header with image and description from metafields */}
           <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 mb-6">
             <div className="flex-shrink-0 mx-auto sm:mx-0">
               <Image
@@ -195,6 +212,7 @@ export default async function CollectionPage({
               <h1 className="text-xl sm:text-2xl font-bold mb-2">
                 {collection?.title}
               </h1>
+              {/* Display collection description from metafields */}
               {collectionMetafields?.custom?.shortDescription && (
                 <p className="text-sm sm:text-base text-gray-600">
                   {collectionMetafields?.custom?.shortDescription}
@@ -203,7 +221,7 @@ export default async function CollectionPage({
             </div>
           </div>
 
-          {/* Mobile Filter Button - only visible on mobile */}
+          {/* Mobile filter button - only visible on mobile */}
           <div className="lg:hidden mb-4">
             <FilterSidebar
               availableFilters={availableFilters}
@@ -212,7 +230,7 @@ export default async function CollectionPage({
             />
           </div>
 
-          {/* Products grid */}
+          {/* Product grid with infinite scroll or empty state */}
           {products && products.length > 0 ? (
             <ProductGridWithInfiniteScroll
               initialProducts={products}

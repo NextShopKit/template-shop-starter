@@ -1,7 +1,11 @@
-// import Navbar from "@/components/Navbar/Navbar";
 import ShopLayout from "@/layouts/ShopLayout";
 import React from "react";
 
+/**
+ * Layout wrapper for all shop-related pages in the NextShopKit starter.
+ * Uses ShopLayout to provide consistent navigation and structure for product, collection, and search pages.
+ * ShopLayout includes the main Navbar and any shared UI for the shop experience.
+ */
 const Layout = ({
   children,
 }: Readonly<{

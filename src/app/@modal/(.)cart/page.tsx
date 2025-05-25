@@ -10,14 +10,20 @@ import CartItem1 from "@/components/CartItems/CartItem1";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Link from "next/link";
 
+/**
+ * Cart drawer modal for the NextShopKit starter template.
+ * Uses Next.js parallel routing to show the cart as a modal/drawer.
+ * Integrates with NextShopKit's cart state and actions for real-time updates.
+ */
 export default function CartDrawer() {
   const router = useRouter();
   const pathname = usePathname();
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const { loading, cart, totalCount, emptyCart } = useCart();
+  const { loading, cart, totalCount, emptyCart } = useCart(); // NextShopKit cart state/actions
   const userLocale = navigator.language;
 
+  // Close drawer on ESC key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") router.back();
@@ -26,21 +32,25 @@ export default function CartDrawer() {
     return () => document.removeEventListener("keydown", handleEsc);
   }, [router]);
 
+  // Animate drawer entrance
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsVisible(true);
     }, 10);
-
     return () => clearTimeout(timeout);
   }, []);
 
+  // Animate and close drawer, then navigate back
   const closeDrawer = () => {
     setIsClosing(true);
     setTimeout(() => {
       router.back();
     }, 300); // match your exit duration
   };
+
+  // Only render drawer on /cart route (parallel routing)
   if (pathname !== "/cart") return null;
+
   return (
     <div
       className={cn(
@@ -57,7 +67,7 @@ export default function CartDrawer() {
         onClick={(e) => e.stopPropagation()}
         className={cn(
           "absolute top-0 right-0 h-full w-[90vw] max-w-md bg-white shadow-xl transition-transform duration-300",
-          "flex flex-col", // <== KEY
+          "flex flex-col",
           isClosing
             ? "translate-x-full"
             : isVisible
@@ -65,7 +75,7 @@ export default function CartDrawer() {
             : "translate-x-full"
         )}
       >
-        {/* HEADER */}
+        {/* Drawer header: cart icon, item count, close button */}
         <div className="flex items-center justify-between p-4 shrink-0">
           <div className="flex items-center gap-2">
             <ShoppingBasket className="text-cyan-700 w-8 h-8" />
@@ -83,11 +93,13 @@ export default function CartDrawer() {
         </div>
 
         <hr className="border-gray-200 shrink-0" />
+
+        {/* Empty cart button */}
         <div className="px-4 pt-2 self-end">
           <Button
             variant="outline"
-            onClick={() => emptyCart()}
-            aria-label="View full cart"
+            onClick={() => emptyCart()} // NextShopKit action
+            aria-label="Clean cart"
             disabled={loading}
           >
             <Trash2 className="w-4 h-4" />
@@ -95,17 +107,17 @@ export default function CartDrawer() {
           </Button>
         </div>
 
-        {/* SCROLLABLE CART ITEMS */}
+        {/* Cart items list, scrollable */}
         <div className="overflow-y-auto px-4 py-4 flex flex-col flex-1 gap-4">
           {cart?.lines.map((line) => (
             <CartItem1 key={line.id} line={line} />
           ))}
         </div>
 
-        {/* FIXED BOTTOM BUTTON */}
+        {/* Checkout button, fixed at bottom */}
         <div className="p-4 shrink-0 border-t border-gray-200">
           <Link
-            href={cart?.checkoutUrl || "#"}
+            href={cart?.checkoutUrl || "#"} // Provided by NextShopKit
             className="w-full"
             target="_blank"
             rel="noopener noreferrer"

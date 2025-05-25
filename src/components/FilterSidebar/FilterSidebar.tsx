@@ -14,6 +14,16 @@ interface FilterSidebarProps {
   isMobile?: boolean;
 }
 
+/**
+ * FilterSidebar for NextShopKit starter template.
+ * Handles all product/collection filtering UI and URL logic.
+ * - Mobile: filter button opens modal
+ * - Desktop: persistent sidebar
+ * - Integrates with NextShopKit's filter data model
+ * - Maps Shopify/NextShopKit filter IDs to URL params and vice versa
+ * - Handles price, metafield, tag, variant, and availability filters
+ */
+
 // Mobile Filter Modal Component
 const MobileFilterModal = ({
   availableFilters,
@@ -30,13 +40,13 @@ const MobileFilterModal = ({
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop for modal overlay */}
       <div
         className="fixed inset-0 bg-black bg-opacity-50 z-40"
         onClick={onClose}
       />
 
-      {/* Modal */}
+      {/* Modal content for filters */}
       <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white z-50 overflow-y-auto">
         <div className="p-4">
           <div className="flex items-center justify-between mb-6">
@@ -56,7 +66,7 @@ const MobileFilterModal = ({
   );
 };
 
-// Filter Button for Mobile
+// Mobile filter button that opens the modal
 const MobileFilterButton = ({
   availableFilters,
   currentFilters,
@@ -66,6 +76,7 @@ const MobileFilterButton = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Count active filters for badge
   const hasActiveFilters = Object.keys(currentFilters || {}).some(
     (key) => key.startsWith("filter_") && currentFilters?.[key]
   );
@@ -100,7 +111,12 @@ const MobileFilterButton = ({
   );
 };
 
-// Extracted filter content component
+/**
+ * Core filter sidebar content (used by both modal and desktop sidebar)
+ * Handles mapping between NextShopKit/Shopify filter IDs and URL params
+ * Handles all filter types: price, metafield, tag, variant, availability
+ * Updates URL for SSR/ISR and NextShopKit data fetching
+ */
 const FilterSidebarContent = ({
   availableFilters = [],
   currentFilters = {},
@@ -112,6 +128,7 @@ const FilterSidebarContent = ({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  // Track which filters are expanded/collapsed
   const [expandedFilters, setExpandedFilters] = useState<Set<string>>(
     new Set(availableFilters.map((filter) => filter.id))
   );
@@ -126,6 +143,7 @@ const FilterSidebarContent = ({
     setExpandedFilters(new Set(availableFilters.map((filter) => filter.id)));
   }, [availableFilters]);
 
+  // Toggle expand/collapse for a filter group
   const toggleFilter = (filterId: string) => {
     const newExpanded = new Set(expandedFilters);
     if (newExpanded.has(filterId)) {
@@ -136,6 +154,11 @@ const FilterSidebarContent = ({
     setExpandedFilters(newExpanded);
   };
 
+  /**
+   * Update the URL when a filter is toggled.
+   * Handles mapping between Shopify/NextShopKit filter IDs and our URL param format.
+   * Supports all filter types (availability, price, metafield, variant, etc).
+   */
   const updateURL = (filterId: string, valueId: string, checked: boolean) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -232,6 +255,7 @@ const FilterSidebarContent = ({
     router.push(newUrl, { scroll: false });
   };
 
+  // Clear all filters (reset URL, preserve search query if present)
   const clearAllFilters = () => {
     const params = new URLSearchParams();
 
@@ -247,6 +271,7 @@ const FilterSidebarContent = ({
     router.push(newUrl, { scroll: false });
   };
 
+  // Get selected values for a filter group (maps URL params back to filter IDs)
   const getSelectedValues = (filterId: string): string[] => {
     // Map Shopify filter IDs to our URL format
     let filterKey = `filter_${filterId}`;
@@ -385,6 +410,7 @@ const FilterSidebarContent = ({
     return {};
   };
 
+  // Check if any filters are active
   const hasActiveFilters = Object.keys(currentFilters).some(
     (key) => key.startsWith("filter_") && currentFilters[key]
   );
@@ -398,6 +424,7 @@ const FilterSidebarContent = ({
     );
   }
 
+  // Render all filter groups, with expand/collapse and active count badges
   return (
     <div className="w-full" key={filterSignature}>
       <div className="flex items-center justify-between mb-4">
@@ -497,6 +524,12 @@ const FilterSidebarContent = ({
   );
 };
 
+/**
+ * Main FilterSidebar component
+ * - On mobile: renders filter button/modal
+ * - On desktop: renders persistent sidebar
+ * - Used in all collection/search pages for NextShopKit
+ */
 const FilterSidebar = ({
   availableFilters = [],
   currentFilters = {},
