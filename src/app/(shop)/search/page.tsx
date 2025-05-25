@@ -52,18 +52,20 @@ function FilterSidebarSkeleton() {
 
 function TypingIndicator({ query }: { query: string }) {
   return (
-    <div className="page-container flex gap-8 py-6">
-      <div className="w-1/4">
-        <FilterSidebarSkeleton />
-      </div>
-      <div className="w-3/4">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="inline-flex items-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2"></div>
-              <span className="text-gray-600">
-                Searching for &ldquo;{query}&rdquo;...
-              </span>
+    <div className="page-container py-4 px-4 sm:py-6">
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+        <div className="hidden lg:block lg:w-1/4">
+          <FilterSidebarSkeleton />
+        </div>
+        <div className="w-full lg:w-3/4">
+          <div className="flex items-center justify-center py-8 sm:py-12">
+            <div className="text-center">
+              <div className="inline-flex items-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900 mr-2"></div>
+                <span className="text-sm sm:text-base text-gray-600">
+                  Searching for &ldquo;{query}&rdquo;...
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -151,11 +153,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   // If no query, show empty state
   if (!query.trim()) {
     return (
-      <div className="page-container py-6">
-        <div className="text-center py-16">
-          <Search className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-          <h2 className="text-xl font-semibold mb-2">Start searching</h2>
-          <p className="text-gray-600 max-w-md mx-auto">
+      <div className="page-container py-4 px-4 sm:py-6">
+        <div className="text-center py-12 sm:py-16">
+          <Search className="mx-auto h-12 w-12 sm:h-16 sm:w-16 text-gray-400 mb-4" />
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">
+            Start searching
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600 max-w-md mx-auto">
             Enter a search term in the navigation bar to find products. You can
             search by product name, description, tags, or any other product
             information.
@@ -208,10 +212,12 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   if (error) {
     return (
-      <div className="page-container py-6">
+      <div className="page-container py-4 px-4 sm:py-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-2">Error</h1>
-          <p className="text-gray-600">{error}</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-red-600 mb-2">
+            Error
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600">{error}</p>
         </div>
       </div>
     );

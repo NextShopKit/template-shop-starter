@@ -119,45 +119,78 @@ export default function SearchPageClient({
   return (
     <Suspense
       fallback={
-        <div className="page-container flex gap-8 py-6">
-          <div className="w-1/4">
-            <FilterSidebarSkeleton />
-          </div>
-          <div className="w-3/4">
-            <SearchResultsSkeleton />
+        <div className="page-container py-4 px-4 sm:py-6">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+            <div className="hidden lg:block lg:w-1/4">
+              <FilterSidebarSkeleton />
+            </div>
+            <div className="w-full lg:w-3/4">
+              <SearchResultsSkeleton />
+            </div>
           </div>
         </div>
       }
     >
-      <div className="page-container flex gap-8 py-6">
-        <div className="w-1/4">
-          <FilterSidebar
-            availableFilters={availableFilters}
-            currentFilters={urlParams}
-          />
-        </div>
-        <div className="w-3/4">
-          {products && products.length > 0 ? (
-            <SearchGridWithInfiniteScroll
-              initialProducts={products}
-              pageInfo={pageInfo}
-              searchQuery={query}
-              filters={filters}
+      <div className="page-container py-4 px-4 sm:py-6">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+          {/* Desktop Sidebar - hidden on mobile */}
+          <div className="hidden lg:block lg:w-1/4">
+            <FilterSidebar
+              availableFilters={availableFilters}
               currentFilters={urlParams}
-              currentLimit={limit}
-              currentSort={sortParam}
+              isMobile={false}
             />
-          ) : (
-            <div className="text-center py-12">
-              <Search className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h2 className="text-lg font-semibold mb-2">No products found</h2>
-              <p className="text-gray-600">
-                {filters.length > 0
-                  ? `No results found for "${query}" with the current filters. Try adjusting your filters or search term.`
-                  : `No results found for "${query}". Try different keywords or check the spelling.`}
-              </p>
+          </div>
+
+          {/* Main content - full width on mobile, 3/4 on desktop */}
+          <div className="w-full lg:w-3/4">
+            {/* Search Results Header */}
+            <div className="mb-4">
+              <h1 className="text-lg sm:text-xl font-semibold mb-2">
+                Search results for &ldquo;{query}&rdquo;
+              </h1>
+              {products && products.length > 0 && (
+                <p className="text-sm text-gray-600">
+                  {products.length} product{products.length !== 1 ? "s" : ""}{" "}
+                  found
+                </p>
+              )}
             </div>
-          )}
+
+            {/* Mobile Filter Button - only visible on mobile */}
+            <div className="lg:hidden mb-4">
+              <FilterSidebar
+                availableFilters={availableFilters}
+                currentFilters={urlParams}
+                isMobile={true}
+              />
+            </div>
+
+            {/* Search Results */}
+            {products && products.length > 0 ? (
+              <SearchGridWithInfiniteScroll
+                initialProducts={products}
+                pageInfo={pageInfo}
+                searchQuery={query}
+                filters={filters}
+                currentFilters={urlParams}
+                currentLimit={limit}
+                currentSort={sortParam}
+              />
+            ) : (
+              <div className="text-center py-8 sm:py-12">
+                <Search className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mb-4" />
+                <h2 className="text-base sm:text-lg font-semibold mb-2">
+                  No products found
+                </h2>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {filters.length > 0
+                    ? `No results found for "${query}" with the current filters. Try adjusting your filters or search term.`
+                    : `No results found for "${query}". Try different keywords or check the spelling.`}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </Suspense>

@@ -2,7 +2,7 @@
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Filter, X } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { FilterGroup } from "@nextshopkit/sdk";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -11,12 +11,103 @@ import PriceSlider from "./PriceSlider";
 interface FilterSidebarProps {
   availableFilters?: FilterGroup[];
   currentFilters?: { [key: string]: string | string[] | undefined };
+  isMobile?: boolean;
 }
 
-const FilterSidebar = ({
+// Mobile Filter Modal Component
+const MobileFilterModal = ({
+  availableFilters,
+  currentFilters,
+  isOpen,
+  onClose,
+}: {
+  availableFilters?: FilterGroup[];
+  currentFilters?: { [key: string]: string | string[] | undefined };
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+        onClick={onClose}
+      />
+
+      {/* Modal */}
+      <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white z-50 overflow-y-auto">
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-semibold">Filters</h2>
+            <Button variant="ghost" size="sm" onClick={onClose} className="p-1">
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <FilterSidebarContent
+            availableFilters={availableFilters}
+            currentFilters={currentFilters}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+// Filter Button for Mobile
+const MobileFilterButton = ({
+  availableFilters,
+  currentFilters,
+}: {
+  availableFilters?: FilterGroup[];
+  currentFilters?: { [key: string]: string | string[] | undefined };
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const hasActiveFilters = Object.keys(currentFilters || {}).some(
+    (key) => key.startsWith("filter_") && currentFilters?.[key]
+  );
+
+  const activeFilterCount = Object.keys(currentFilters || {}).filter(
+    (key) => key.startsWith("filter_") && currentFilters?.[key]
+  ).length;
+
+  return (
+    <>
+      <Button
+        variant="outline"
+        onClick={() => setIsModalOpen(true)}
+        className="flex items-center gap-2 relative"
+      >
+        <Filter className="h-4 w-4" />
+        Filters
+        {hasActiveFilters && (
+          <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            {activeFilterCount}
+          </span>
+        )}
+      </Button>
+
+      <MobileFilterModal
+        availableFilters={availableFilters}
+        currentFilters={currentFilters}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+    </>
+  );
+};
+
+// Extracted filter content component
+const FilterSidebarContent = ({
   availableFilters = [],
   currentFilters = {},
-}: FilterSidebarProps) => {
+}: {
+  availableFilters?: FilterGroup[];
+  currentFilters?: { [key: string]: string | string[] | undefined };
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -403,6 +494,30 @@ const FilterSidebar = ({
         })}
       </div>
     </div>
+  );
+};
+
+const FilterSidebar = ({
+  availableFilters = [],
+  currentFilters = {},
+  isMobile = false,
+}: FilterSidebarProps) => {
+  // On mobile, show the filter button, on desktop show the sidebar
+  if (isMobile) {
+    return (
+      <MobileFilterButton
+        availableFilters={availableFilters}
+        currentFilters={currentFilters}
+      />
+    );
+  }
+
+  // Desktop sidebar
+  return (
+    <FilterSidebarContent
+      availableFilters={availableFilters}
+      currentFilters={currentFilters}
+    />
   );
 };
 

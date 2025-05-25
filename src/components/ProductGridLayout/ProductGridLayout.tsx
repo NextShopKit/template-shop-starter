@@ -22,10 +22,10 @@ export default function ProductGridLayout({
 
         {/* Right Two Boxes */}
         <div className="flex flex-col gap-6 h-full">
-          <div className="flex-1">
+          <div className="flex-1 aspect-[4/3] md:aspect-auto">
             <Card1 product={product2} />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 aspect-[4/3] md:aspect-auto">
             <Card1 product={product3} />
           </div>
         </div>

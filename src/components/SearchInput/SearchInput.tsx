@@ -13,6 +13,10 @@ interface SearchInputProps {
   autoFocus?: boolean;
 }
 
+// This component renders a search input that lets users search for products from any page.
+// It updates the URL and routes to the /search page after the user stops typing (debounced),
+// so the search results update smoothly without lag or unnecessary reloads.
+
 export default function SearchInput({
   placeholder = "Search products...",
   className = "",
@@ -22,20 +26,24 @@ export default function SearchInput({
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
+  // Local state to keep track of the current value in the search input
   const [searchValue, setSearchValue] = useState("");
 
-  // Debounced search function - only update URL after typing stops
+  // Debounced function: waits until the user stops typing for 300ms before updating the URL.
+  // This prevents the app from routing on every keystroke, which can cause lag, especially in production.
+  // If the user is not on the /search page, it pushes to /search with the query param.
+  // If already on /search, it just updates the query param in the URL (without adding to browser history).
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       if (pathname !== "/search") {
-        // Not on search page, push to /search
+        // If not on the search page, navigate to /search with the query
         if (query.trim()) {
           router.push(`/search?query=${encodeURIComponent(query.trim())}`);
         } else {
           router.push("/search");
         }
       } else {
-        // Already on /search, just update query param
+        // If already on /search, just update the query param
         if (query.trim()) {
           router.replace(`/search?query=${encodeURIComponent(query.trim())}`);
         } else {
@@ -46,16 +54,17 @@ export default function SearchInput({
     [router, pathname]
   );
 
-  // Handle input change - only update local state, debounce URL update
+  // Called whenever the user types in the input.
+  // Updates local state immediately, and triggers the debounced search function.
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchValue(value);
     debouncedSearch(value);
   };
 
-  // Handle form submission or Enter key - immediate search
+  // Called when the user submits the form (e.g. presses Enter or clicks search).
+  // Cancels any pending debounced search and immediately routes to /search with the query.
   const handleSearch = () => {
-    // Cancel any pending debounced search
     debouncedSearch.cancel();
 
     if (searchValue.trim()) {
@@ -67,7 +76,7 @@ export default function SearchInput({
     }
   };
 
-  // Handle Enter key press
+  // Handles the Enter key in the input, so pressing Enter triggers an immediate search.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -75,24 +84,24 @@ export default function SearchInput({
     }
   };
 
-  // Clear search
+  // Clears the search input and routes to the base /search page (no query param).
   const clearSearch = () => {
     debouncedSearch.cancel();
     setSearchValue("");
     router.push("/search");
   };
 
-  // Sync searchValue with URL after mount
+  // Syncs the input value with the URL when the component mounts or the URL changes.
+  // This ensures the input always shows the current query when on the /search page.
   useEffect(() => {
     if (pathname === "/search") {
       setSearchValue(searchParams.get("query") || "");
     } else {
       setSearchValue("");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, searchParams]);
 
-  // Cleanup debounced function on unmount
+  // Cleans up the debounced function when the component unmounts to avoid memory leaks.
   useEffect(() => {
     return () => {
       debouncedSearch.cancel();
@@ -108,6 +117,7 @@ export default function SearchInput({
       className={`relative ${className}`}
     >
       <div className="relative">
+        {/* Search icon on the left side of the input */}
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
           type="text"
@@ -118,6 +128,7 @@ export default function SearchInput({
           autoFocus={autoFocus}
           className="pl-10 pr-10"
         />
+        {/* Show a clear (X) button when there is text in the input */}
         {searchValue && (
           <Button
             type="button"

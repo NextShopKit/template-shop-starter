@@ -36,7 +36,7 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container px-4 sm:px-6">
       <nav aria-label="Breadcrumb" className="w-full pt-4">
         <ol className="flex items-center gap-2 py-4 text-sm text-muted-foreground">
           <li>
@@ -48,101 +48,142 @@ const ProductHeader = ({ product }: ProductHeaderProps) => {
             </Link>
           </li>
           <li aria-hidden="true">
-            <ChevronRight className="text-gray-400" />
+            <ChevronRight className="text-gray-400 h-4 w-4" />
           </li>
-          <li aria-current="page" className="font-medium text-foreground">
+          <li
+            aria-current="page"
+            className="font-medium text-foreground truncate"
+          >
             {title}
           </li>
         </ol>
       </nav>
-      <div className="flex gap-8 py-4">
-        <div className="w-1/2">
-          <div className="h-150 relative overflow-hidden rounded-lg border border-gray-200 shadow-md group">
+
+      {/* Mobile-first responsive layout */}
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 py-4">
+        {/* Product Images - full width on mobile, half on desktop */}
+        <div className="w-full lg:w-1/2">
+          {/* Main product image */}
+          <div className="aspect-square relative overflow-hidden rounded-lg border border-gray-200 shadow-md group">
             <div className="w-full h-full relative transition-transform duration-300 group-hover:scale-105">
               <Image
                 src={currentImage?.originalSrc ?? ""}
                 alt={currentImage?.altText ?? title}
                 fill
                 className="object-contain select-none pointer-events-none"
-                sizes="(max-width: 768px) 100vw, 33vw"
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
             </div>
           </div>
-          {/* Add any additional product image gallery here. They are small boxes */}
-          <div className="flex gap-2 mt-4">
-            {images?.map((image, index) => (
-              <div
-                key={index}
-                onClick={() => setCurrentImage(image)}
-                className="aspect-square w-1/4 cursor-pointer relative overflow-hidden rounded-lg border border-gray-200 shadow-sm hover:ring-2 hover:ring-black transition-all"
-              >
-                <Image
-                  src={image?.originalSrc ?? ""}
-                  alt={image?.altText ?? title}
-                  fill
-                  className="object-contain pointer-events-none"
-                  sizes="(max-width: 768px) 100vw, 10vw"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="w-1/2">
-          <h1>{title}</h1>
-          <p className="text-gray-600 mt-2">
-            {metafields?.general?.shortDescription}
-          </p>
-          <div className="mt-4">
-            {variants.length > 1 && (
-              <div>
-                <h2 className="text-lg font-semibold mt-4 mb-2">Variants</h2>
-                <div className="flex flex-wrap gap-2">
-                  {variants.map((variant, index) => (
-                    <Button
-                      key={index}
-                      disabled={!variant.availableForSale}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={cn(
-                        "px-3 py-1 text-sm rounded-full border transition-colors cursor-pointer",
-                        selectedVariant.id === variant.id
-                          ? "bg-black text-white border-black"
-                          : "bg-white text-black border-gray-300 hover:bg-gray-100"
-                      )}
-                    >
-                      {variant.variantTitle}
-                    </Button>
-                  ))}
+
+          {/* Image gallery thumbnails */}
+          {images && images.length > 1 && (
+            <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+              {images?.map((image, index) => (
+                <div
+                  key={index}
+                  onClick={() => setCurrentImage(image)}
+                  className="flex-shrink-0 aspect-square w-16 sm:w-20 cursor-pointer relative overflow-hidden rounded-lg border border-gray-200 shadow-sm hover:ring-2 hover:ring-black transition-all"
+                >
+                  <Image
+                    src={image?.originalSrc ?? ""}
+                    alt={image?.altText ?? title}
+                    fill
+                    className="object-contain pointer-events-none"
+                    sizes="80px"
+                  />
                 </div>
-              </div>
-            )}
-          </div>
-          <div className="flex gap-2 mt-6 align-center">
-            <p className="text-2xl font-bold text-gray-700">Price:</p>
-            <p className="text-2xl font-bold text-cyan-700">
-              {formatCurrency(selectedVariant.price, userLocale)}
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Product Details - full width on mobile, half on desktop */}
+        <div className="w-full lg:w-1/2">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-3">{title}</h1>
+
+          {metafields?.general?.shortDescription && (
+            <p className="text-gray-600 text-sm sm:text-base mb-6 leading-relaxed">
+              {metafields?.general?.shortDescription}
             </p>
+          )}
+
+          {/* Price */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-6">
+            <span className="text-lg sm:text-xl font-semibold text-gray-700">
+              Price:
+            </span>
+            <span className="text-2xl sm:text-3xl font-bold text-cyan-700">
+              {formatCurrency(selectedVariant.price, userLocale)}
+            </span>
           </div>
-          <div className="mt-4">
+
+          {/* Variants */}
+          {variants.length > 1 && (
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold mb-3">Variants</h2>
+              <div className="flex flex-wrap gap-2">
+                {variants.map((variant, index) => (
+                  <Button
+                    key={index}
+                    disabled={!variant.availableForSale}
+                    onClick={() => setSelectedVariant(variant)}
+                    size="sm"
+                    className={cn(
+                      "px-3 py-2 text-sm rounded-full border transition-colors cursor-pointer",
+                      selectedVariant.id === variant.id
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-black border-gray-300 hover:bg-gray-100"
+                    )}
+                  >
+                    {variant.variantTitle}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quantity Selector */}
+          <div className="mb-6">
+            <h3 className="text-sm font-medium mb-2">Quantity</h3>
             <QuantitySelector
               value={quantity}
               setValue={setQuantity}
               loading={loading}
               size="md"
-              min={0}
+              min={1}
               max={10}
             />
           </div>
-          <div className="flex gap-2 mt-4 w-max">
+
+          {/* Add to Cart Button */}
+          <div className="w-full">
             <Button
               variant="outline"
-              size="default"
+              size="lg"
+              className="w-full sm:w-auto min-w-48"
               aria-label="Add to cart"
-              disabled={loading}
+              disabled={loading || !selectedVariant.availableForSale}
               onClick={() => handleAddToCart(selectedVariant.id)}
             >
-              <ShoppingCart /> Add to cart
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              {loading ? "Adding..." : "Add to cart"}
             </Button>
+          </div>
+
+          {/* Availability status */}
+          <div className="mt-4">
+            <span
+              className={cn(
+                "text-sm font-medium",
+                selectedVariant.availableForSale
+                  ? "text-green-600"
+                  : "text-red-600"
+              )}
+            >
+              {selectedVariant.availableForSale ? "In stock" : "Out of stock"}
+            </span>
           </div>
         </div>
       </div>

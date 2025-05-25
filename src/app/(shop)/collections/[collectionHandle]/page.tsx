@@ -135,10 +135,14 @@ export default async function CollectionPage({
 
   if (error) {
     return (
-      <div className="page-container py-6">
+      <div className="page-container py-4 px-4 sm:py-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-2">Error</h1>
-          <p className="text-gray-600">{collectionData.error}</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-red-600 mb-2">
+            Error
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600">
+            {collectionData.error}
+          </p>
         </div>
       </div>
     );
@@ -146,10 +150,12 @@ export default async function CollectionPage({
 
   if (!collection) {
     return (
-      <div className="page-container py-6">
+      <div className="page-container py-4 px-4 sm:py-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Collection Not Found</h1>
-          <p className="text-gray-600">
+          <h1 className="text-xl sm:text-2xl font-bold mb-2">
+            Collection Not Found
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600">
             The requested collection could not be found.
           </p>
         </div>
@@ -160,53 +166,76 @@ export default async function CollectionPage({
   console.log(collectionMetafields);
 
   return (
-    <div className="page-container flex gap-8 py-6">
-      <div className="w-1/4">
-        <FilterSidebar
-          availableFilters={availableFilters}
-          currentFilters={urlParams}
-        />
-      </div>
-      <div className="w-3/4">
-        <div className="flex items-start gap-6 mb-6">
-          <div className="flex-shrink-0">
-            <Image
-              src={collectionMetafields?.custom?.mainImage?.url}
-              alt={collection?.title}
-              width={90}
-              height={90}
-              className="w-[90px] h-[90px] rounded-full object-cover"
+    <div className="page-container py-4 px-4 sm:py-6">
+      {/* Mobile-first layout */}
+      <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+        {/* Desktop Sidebar - hidden on mobile */}
+        <div className="hidden lg:block lg:w-1/4">
+          <FilterSidebar
+            availableFilters={availableFilters}
+            currentFilters={urlParams}
+            isMobile={false}
+          />
+        </div>
+
+        {/* Main content - full width on mobile, 3/4 on desktop */}
+        <div className="w-full lg:w-3/4">
+          {/* Collection header - responsive layout */}
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 mb-6">
+            <div className="flex-shrink-0 mx-auto sm:mx-0">
+              <Image
+                src={collectionMetafields?.custom?.mainImage?.url}
+                alt={collection?.title}
+                width={90}
+                height={90}
+                className="w-16 h-16 sm:w-[90px] sm:h-[90px] rounded-full object-cover"
+              />
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <h1 className="text-xl sm:text-2xl font-bold mb-2">
+                {collection?.title}
+              </h1>
+              {collectionMetafields?.custom?.shortDescription && (
+                <p className="text-sm sm:text-base text-gray-600">
+                  {collectionMetafields?.custom?.shortDescription}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Filter Button - only visible on mobile */}
+          <div className="lg:hidden mb-4">
+            <FilterSidebar
+              availableFilters={availableFilters}
+              currentFilters={urlParams}
+              isMobile={true}
             />
           </div>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold mb-2">{collection?.title}</h1>
-            {collectionMetafields?.custom?.shortDescription && (
-              <p className="text-gray-600">
-                {collectionMetafields?.custom?.shortDescription}
+
+          {/* Products grid */}
+          {products && products.length > 0 ? (
+            <ProductGridWithInfiniteScroll
+              initialProducts={products}
+              pageInfo={pageInfo}
+              collectionHandle={collectionHandle}
+              filters={filters}
+              currentFilters={urlParams}
+              currentLimit={limit}
+              currentSort={sortParam}
+            />
+          ) : (
+            <div className="text-center py-8 sm:py-12">
+              <h2 className="text-base sm:text-lg font-semibold mb-2">
+                No products found
+              </h2>
+              <p className="text-sm sm:text-base text-gray-600">
+                {filters.length > 0
+                  ? "Try adjusting your filters to see more products."
+                  : "This collection doesn't have any products yet."}
               </p>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-        {products && products.length > 0 ? (
-          <ProductGridWithInfiniteScroll
-            initialProducts={products}
-            pageInfo={pageInfo}
-            collectionHandle={collectionHandle}
-            filters={filters}
-            currentFilters={urlParams}
-            currentLimit={limit}
-            currentSort={sortParam}
-          />
-        ) : (
-          <div className="text-center py-12">
-            <h2 className="text-lg font-semibold mb-2">No products found</h2>
-            <p className="text-gray-600">
-              {filters.length > 0
-                ? "Try adjusting your filters to see more products."
-                : "This collection doesn't have any products yet."}
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
