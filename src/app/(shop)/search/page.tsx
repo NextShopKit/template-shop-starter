@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import { fetchSearchResults } from "@/lib/nextshopkit/search";
-import SearchPageClient from "@/components/SearchGridLayout/SearchPageClient";
+import { SearchPageClient } from "@/components/features/search";
 
 export const dynamic = "force-dynamic";
 
@@ -208,7 +208,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     ...(reverse !== undefined && { reverse }),
   });
 
-  const { products, error, availableFilters, pageInfo } = searchData;
+  const { products, error, availableFilters, pageInfo, totalCount } =
+    searchData;
 
   if (error) {
     return (
@@ -233,6 +234,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       filters={filters}
       limit={limit}
       sortParam={sortParam}
+      totalCount={totalCount}
     />
   );
 }

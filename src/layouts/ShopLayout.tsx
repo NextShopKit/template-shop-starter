@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/Navbar/Navbar";
+import { Navbar } from "@/components/shared";
 import React, { Fragment } from "react";
 
 interface ShopLayoutProps {

@@ -6,7 +6,7 @@ import { useCart } from "@nextshopkit/sdk/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CreditCard, ShoppingBasket, Trash2, X } from "lucide-react";
-import CartItem1 from "@/components/CartItems/CartItem1";
+import { CartItem1 } from "@/components/features/cart";
 import { formatCurrency } from "@/utils/formatCurrency";
 import Link from "next/link";
 
@@ -79,7 +79,7 @@ export default function CartDrawer() {
         <div className="flex items-center justify-between p-4 shrink-0">
           <div className="flex items-center gap-2">
             <ShoppingBasket className="text-cyan-700 w-8 h-8" />
-            <h2 className="text-xl font-bold">{totalCount} items</h2>
+            <h2 className="text-xl font-bold">{totalCount || 0} items</h2>
           </div>
           <Button
             variant="ghost"
@@ -109,7 +109,7 @@ export default function CartDrawer() {
 
         {/* Cart items list, scrollable */}
         <div className="overflow-y-auto px-4 py-4 flex flex-col flex-1 gap-4">
-          {cart?.lines.map((line) => (
+          {cart?.lines?.map((line) => (
             <CartItem1 key={line.id} line={line} />
           ))}
         </div>

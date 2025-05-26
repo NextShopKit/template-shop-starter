@@ -1,4 +1,4 @@
-import ProductGridLayout from "@/components/ProductGridLayout/ProductGridLayout";
+import { ProductGridLayout } from "@/components/features/product";
 import { fetchCollectionWithMetafields } from "@/lib/nextshopkit/collection";
 
 /**

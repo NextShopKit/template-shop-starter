@@ -1,6 +1,6 @@
 import { fetchCollectionWithMetafields } from "@/lib/nextshopkit/collection";
-import FilterSidebar from "@/components/FilterSidebar/FilterSidebar";
-import ProductGridWithInfiniteScroll from "@/components/ProductGridLayout/ProductGridWithInfiniteScroll";
+import { FilterSidebar } from "@/components/features/search";
+import { ProductGridWithInfiniteScroll } from "@/components/features/product";
 import Image from "next/image";
 
 interface CollectionPageProps {

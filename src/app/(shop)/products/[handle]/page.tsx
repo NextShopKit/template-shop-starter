@@ -1,4 +1,4 @@
-import ProductHeader from "@/components/ProductHeader/ProductHeader";
+import { ProductHeader } from "@/components/features/product";
 import ShopLayout from "@/layouts/ShopLayout";
 import { fetchProduct } from "@/lib/nextshopkit/product";
 import { notFound } from "next/navigation";
