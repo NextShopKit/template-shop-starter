@@ -8,7 +8,7 @@ import { fetchCollectionWithMetafields } from "@/lib/nextshopkit/collection";
  */
 export default async function Home() {
   // Fetch the "home-page" collection with products and metafields
-  // This is a server component, so data is fetched at build/request time
+  // This is a server component, so data is fetched at build/request time.
   const result = await fetchCollectionWithMetafields({
     collectionHandle: "home-page",
     includeProducts: true,
